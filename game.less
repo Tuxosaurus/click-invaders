@@ -1,0 +1,572 @@
+/*** TODO ***/
+/*
+Preprocess HTML
+Add "You Win" screen
+Increase hitbox
+Add clear instructions
+Implement LESS advanced & features?
+And selector-interpolation .myclass_@{index} http://lesscss.org/#-selector-interpolation
+See if the use of :before/after can help
+Add changes to the sky gradient
+Add boss
+*/
+
+
+/*** SETTINGS ***/
+@ratio: 2; // game screen resolution mulitplier, base resolution is 320x240
+@speed: 14s; // animation speed, serves as difficulty setting.
+@resolutionW: (320px * @ratio);
+@resolutionH: (240px * @ratio);
+@startGameZ: -1;
+@lightZ: -1;
+@spaceZ: 1;
+@scoreZ: 2;
+@bangZ: 3;
+@pointZ: 3;
+@invaderZ: 4;
+@startZ: 5;
+@timeZ: 6;
+
+.spawnInvader (@num: 1, @direction: normal) {
+    label,
+    .target {
+      animation-delay: (1s * @num);
+      animation-iteration-count: infinite;
+      animation-direction: alternate, @direction;
+    }
+    
+    .point {
+      right: ((24px * @num  * @ratio) - 24px);
+    }
+}
+
+.spawnStar (@num: 1) {
+  animation-delay: -(1s * @num);
+}
+
+.spawnBuilding (@num: 1) {
+  left: (@buildingW * @num);
+}
+
+.space (@topColor: #000, @bottomColor: #00003c) {
+  background-color: @topColor;
+  background: linear-gradient(to bottom, @topColor 1%,@bottomColor 100%);
+}
+    
+/*** ANIMATIONS ***/
+@keyframes blink {
+  from {
+    color: black;
+  }
+ 
+  to {
+    color: yellow;
+  }
+}
+
+@keyframes shake {
+  from {
+    margin-left: -(2px * @ratio);
+  }
+ 
+  to {
+    margin-left: (2px * @ratio);
+  }
+}
+
+@keyframes shine {
+  from {
+    opacity: 1;
+  }
+ 
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scan {
+  from {
+    transform: rotate(-22deg);
+    transform-origin: 50% 100%;
+  }
+ 
+  to {
+    transform: rotate(22deg);
+    transform-origin: 50% 100%;
+  }
+}
+
+@keyframes explode {
+  from {
+    opacity: 1;
+    z-index: 10;
+  }
+ 
+  to {
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes fly {
+  0% {
+    top: 0;
+    left: -20%;
+    padding: 0 (10px * @ratio);
+  }
+ 
+  25% {
+    top: 40px;
+    left: 120%;
+    padding: (5px * @ratio);
+  }
+  
+  50% {
+    top: 30%;
+    left: -20%;
+    padding: 0 (10px * @ratio);
+  }
+ 
+  75% {
+    top: 50%;
+    left: 120%;
+    padding: (5px * @ratio);
+  }
+ 
+  100% {
+    top: 80%;
+    left: -20%;
+    padding: 0 (10px * @ratio);
+  }
+}
+
+@keyframes time {
+  0% {
+    height: (4px * @ratio);
+    width: (@resolutionW - (24px * @ratio));
+    bottom: (3px * @ratio);
+    right: (12px * @ratio);
+    z-index: @timeZ;
+  }
+  
+  99% {
+    height: (4px * @ratio);
+    width: 0;
+    bottom: (3px * @ratio);
+    right: (12px * @ratio);
+    z-index: @timeZ;
+  }
+  
+  100% {
+    width: @resolutionW;
+    height: @resolutionH;
+    bottom: 0;
+    right: 0;
+    z-index: @timeZ;
+  }
+}
+
+/*** ELEMENTS ***/
+@import url(http://fonts.googleapis.com/css?family=Press+Start+2P);
+
+body {
+  font-size: (12px * @ratio);
+  font-family: 'Press Start 2P', cursive;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+#start,
+#space,
+#game-over {
+  width: @resolutionW;
+  height: @resolutionH;
+  overflow: hidden;
+}
+
+#start {
+  position: relative;
+  z-index: @startZ;
+  display: block;
+  line-height: @resolutionH;
+  background: black;
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+  
+  span {
+    color: yellow;
+    animation: blink 1s infinite;
+  }
+}
+
+#start-game {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: @startGameZ;
+  
+  &:checked {
+    ~#start {
+      display: none;
+    }
+      
+    ~#timer {
+      animation: time @speed linear forwards;
+    }
+  }
+}
+
+#space {
+  .space;
+  position: relative;
+  z-index: @spaceZ;
+    
+  margin: 50px auto;
+  cursor: crosshair;
+    
+  .star {
+    position: absolute;
+    top: (10px * @ratio);
+    left: (10px * @ratio);
+    width: (1px * @ratio);
+    height: (1px * @ratio);
+    background: white;
+    animation: shine 4s infinite alternate;
+
+    &.two {
+      top: (20px * @ratio);
+      left: (120px * @ratio);
+      .spawnStar(2);
+    }
+    
+    &.three {
+      top: (60px * @ratio);
+      left: (30px * @ratio);
+      .spawnStar(3);
+    }
+    
+    &.four {
+      top: (50px * @ratio);
+      left: (180px * @ratio);
+      .spawnStar(4);
+    }
+    
+    &.five {
+      top: (30px * @ratio);
+      left: (200px * @ratio);
+      .spawnStar(5);
+    }
+      
+    &.six {
+      top: (90px * @ratio);
+      left: (260px * @ratio);
+      .spawnStar(1);
+    }
+    
+    &.seven {
+      top: (100px * @ratio);
+      left: (120px * @ratio);
+      .spawnStar(7);
+    }
+    
+    &.height {
+      top: (70px * @ratio);
+      left: (50px * @ratio);
+      .spawnStar(8);
+    }
+    
+    &.nine {
+      top: (80px * @ratio);
+      left: (20px * @ratio);
+      .spawnStar(9);
+    }
+      
+    &.ten {
+      top: (30px * @ratio);
+      left: (280px * @ratio);
+      .spawnStar(6);
+    }
+  }
+
+  .building {
+    @buildingW: (32px * @ratio);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: @buildingW;
+    height: (70px * @ratio);
+    background: black;
+
+    &.two {
+      .spawnBuilding(1);
+      height: (50px * @ratio);
+    }
+    
+    &.three {
+      .spawnBuilding(2);
+      height: (90px * @ratio);
+    }
+    
+    &.four {
+      .spawnBuilding(3);
+      height: (80px * @ratio);
+    }
+    
+    &.five {
+      .spawnBuilding(4);
+      height: (100px * @ratio);
+    }
+      
+    &.six {
+      .spawnBuilding(5);
+      height: (40px * @ratio);
+    }
+    
+    &.seven {
+      .spawnBuilding(6);
+      height: (90px * @ratio);
+    }
+    
+    &.height {
+      .spawnBuilding(7);
+      height: (80px * @ratio);
+    }
+    
+    &.nine {
+      .spawnBuilding(8);
+      height: (110px * @ratio);
+    }
+      
+    &.ten {
+      .spawnBuilding(9);
+      height: (70px * @ratio);
+    }
+  }
+
+  // down-triangle from www.css3shapes.com
+  .light {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: @lightZ;
+    width: 0; 
+    height: 0;
+    opacity: .1;
+      
+    border-top: ((@resolutionH + 100px) * @ratio) solid white;
+    border-left: (30px * @ratio) solid transparent; 
+    border-right: (30px * @ratio) solid transparent;
+      
+    &.one {
+      left: (@resolutionW / 5);
+      animation: scan 4s ease-in-out infinite alternate;
+    }
+      
+    &.two {
+      left: (@resolutionW / 1.5);
+      animation: scan 4s ease-in-out -1s infinite alternate-reverse;
+    }
+  }
+}
+
+#score {
+  width: (298px * @ratio);
+  height: (22px * @ratio);
+  padding: (8px * @ratio) (10px * @ratio) 0;
+  background-color: yellow;
+  font-size: (12px * @ratio);
+  overflow: hidden;
+  cursor: default;
+  
+  position: absolute;
+  bottom: (1px * @ratio);
+  left: (1px * @ratio);
+  z-index: @scoreZ;
+}
+
+#timer {
+  width: @resolutionW;
+  height: @resolutionH;
+  background-color: black;
+  color: white;
+    
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+    
+  #game-over {
+    background-color: black;
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: (60px * @ratio);
+    left: 0;
+    z-index: -1;
+    cursor: default;
+    
+    span {
+      display: block;
+      margin-bottom: (20px  * @ratio);
+      color: yellow;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+}
+  
+.invader {
+  .point {
+    position: absolute;
+    right: 0;
+    bottom: (11px * @ratio);
+    z-index: @pointZ;
+    width: (14px * @ratio);
+    height: (14px * @ratio);
+    background: black;
+    border-radius: 50%;
+    cursor: default;
+  }
+    
+  label {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -20%;
+    z-index: @invaderZ;
+    cursor: crosshair;
+    animation: fly @speed infinite;
+    
+    width: (20px * @ratio);
+    height: (20px * @ratio);
+    padding: (5px * @ratio);
+    text-align: center;
+    line-height: (20px * @ratio);
+    margin: (-5px * @ratio) 0 0 (-5px * @ratio);
+    background: red;
+    border-radius: 50%;
+    box-shadow: 0 0 (10px * @ratio) red;
+    
+    .eye {
+      display: block;
+      position: absolute;
+      top: (8px * @ratio);
+      width: (5px * @ratio);
+      height: (5px * @ratio);
+      background: yellow;
+      border-radius: 50%;
+        
+      &.left {
+        left: (8px * @ratio);
+      }
+      &.right {
+        right: (8px * @ratio);
+      }
+    }
+  }
+  
+  .target {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    width: (10px * @ratio);
+    height: (10px * @ratio);
+    margin: (2px * @ratio) 0 0 (2px * @ratio);
+    
+    &:checked {
+      display: none;
+
+      ~.explosion {
+        display: block;
+        animation: explode 1s;
+      }
+    
+      ~label {
+        animation: none;
+        display: none;
+        
+        span {
+          display: none;
+        }
+      }
+    
+      ~.point {
+        background: red;
+      }
+    }
+  }
+
+  &.one {
+    .spawnInvader(1);
+  }
+
+  &.two {
+    .spawnInvader(2, reverse);
+  }
+  
+  &.three {
+    .spawnInvader(3);
+  }
+  
+  &.four {
+    .spawnInvader(4);
+  }
+  
+  &.five {
+    .spawnInvader(5, reverse);
+  }
+}
+
+// twelve-point-star from www.css3shapes.com
+.explosion {
+  @explosionSize: (150px * @ratio);
+  .explosionBase {
+    width: @explosionSize;
+    height: @explosionSize;
+    background: yellow;
+    box-shadow: 0 0 (10px * @ratio) yellow;
+    position: absolute;
+  }
+  
+  .explosionBase;
+  display: block;
+  opacity: 0;
+  top: (30px * @ratio);
+  left: ((@resolutionW /2) - (@explosionSize / 2));
+  
+  &:before,
+  &:after {
+    .explosionBase;
+    content: "";
+  }
+  
+  &:before {
+    transform: rotate(30deg);
+  }
+  
+  &:after {
+    transform: rotate(-30deg);
+  }
+  
+  span {
+    position: absolute;
+    top: ((@explosionSize / 2) - (10px * @ratio));
+    left: 0;
+    z-index: @bangZ;
+    
+    display: block;
+    width: @explosionSize;
+    height: @explosionSize;
+    font-size: (24px * @ratio);
+    text-align: center;
+    text-transform: uppercase;
+    user-select: none;
+    
+    animation: shake 0.1s infinite;
+  }
+}
