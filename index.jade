@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    title Click Invaders - CSS game
+  body
+    #space.screen
+      input#start-game(type="checkbox")
+      label#start.screen(for="start-game") Click Invaders
+        span &nbsp;Start
+      
+      each text, index in {'one':'Zap!', 'two':'Paf!', 'three':'Bam!', 'four':'Crash!', 'five':'Boom!'}
+        div(class="Invader Invader--#{index}")
+          input.Invader-trigger(id="invader-#{index}", type="checkbox")
+          label.Invader-sprite(for="invader-#{index}")
+          .Explosion
+            span #{text}
+          .Invader-point
+      
+      #timer
+        #game-over.screen
+          span Time over
+          | Thanks for playing
+      #score Score
