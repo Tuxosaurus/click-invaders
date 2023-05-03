@@ -1,0 +1,508 @@
+@font-face {
+  font-family: "Press Start 2P";
+  src: local("Press Start 2P"),
+    url("Press_Start_2P/PressStart2P-Regular.ttf") format("truetype");
+}
+
+@keyframes blink {
+  from {
+    color: black;
+  }
+  to {
+    color: yellow;
+  }
+}
+@keyframes shake {
+  from {
+    margin-left: -8px;
+  }
+  to {
+    margin-left: 8px;
+  }
+}
+@keyframes shine {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes scan {
+  from {
+    transform: rotate(-22deg);
+    transform-origin: 50% 100%;
+  }
+  to {
+    transform: rotate(22deg);
+    transform-origin: 50% 100%;
+  }
+}
+@keyframes explode {
+  from {
+    opacity: 1;
+    z-index: 10;
+  }
+  to {
+    opacity: 0;
+    z-index: -1;
+  }
+}
+@keyframes fly {
+  0% {
+    transform: translateX(-300%) translateY(0);
+  }
+  25% {
+    transform: translateX(900%) translateY(100%);
+  }
+  50% {
+    transform: translateX(-300%) translateY(250%);
+  }
+  75% {
+    transform: translateX(900%) translateY(300%);
+  }
+  100% {
+    transform: translateX(-300%) translateY(500%);
+  }
+}
+@keyframes boing {
+  0% {
+    transform: scaleX(0.7) scaleY(0.8);
+  }
+  25% {
+    transform: scaleX(1) scaleY(0.7);
+  }
+  50% {
+    transform: scaleX(0.7) scaleY(0.8);
+  }
+  75% {
+    transform: scaleX(1) scaleY(0.7);
+  }
+  100% {
+    transform: scaleX(0.7) scaleY(0.8);
+  }
+}
+@keyframes time {
+  0% {
+    height: 16px;
+    width: 100%;
+    bottom: 12px;
+    right: 0;
+    z-index: 6;
+  }
+  99% {
+    height: 16px;
+    width: 0;
+    bottom: 12px;
+    right: 0;
+    z-index: 6;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    z-index: 6;
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+html {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+body {
+  font-size: 48px;
+  font-family: "Press Start 2P", cursive;
+  width: inherit;
+  height: inherit;
+}
+#start,
+#space,
+#game-over,
+#you-win {
+  width: 1280px;
+  height: 960px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+#start {
+  position: relative;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  line-height: 960px;
+  background: black;
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#start span {
+  color: yellow;
+  animation: blink 1s infinite;
+}
+#start-game {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+}
+#start-game:checked ~ #start {
+  display: none;
+}
+#start-game:checked ~ #timer {
+  animation: time 12s linear forwards;
+}
+#space {
+  border: 40px solid white;
+  background-color: #000;
+  background: linear-gradient(to bottom, #000 1%, #00003c 100%);
+  position: relative;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: crosshair;
+}
+#space .star {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 4px;
+  height: 4px;
+  background: white;
+  animation: shine 4s infinite alternate;
+}
+#space .star.two {
+  top: 80px;
+  left: 480px;
+  animation-delay: -2s;
+}
+#space .star.three {
+  top: 240px;
+  left: 120px;
+  animation-delay: -3s;
+}
+#space .star.four {
+  top: 200px;
+  left: 720px;
+  animation-delay: -4s;
+}
+#space .star.five {
+  top: 120px;
+  left: 800px;
+  animation-delay: -5s;
+}
+#space .star.six {
+  top: 360px;
+  left: 1040px;
+  animation-delay: -1s;
+}
+#space .star.seven {
+  top: 400px;
+  left: 480px;
+  animation-delay: -7s;
+}
+#space .star.height {
+  top: 280px;
+  left: 200px;
+  animation-delay: -8s;
+}
+#space .star.nine {
+  top: 320px;
+  left: 80px;
+  animation-delay: -9s;
+}
+#space .star.ten {
+  top: 120px;
+  left: 1120px;
+  animation-delay: -6s;
+}
+#space .building {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 128px;
+  height: 280px;
+  background: black;
+}
+#space .building.two {
+  left: 128px;
+  height: 200px;
+}
+#space .building.three {
+  left: 256px;
+  height: 360px;
+}
+#space .building.four {
+  left: 384px;
+  height: 320px;
+}
+#space .building.five {
+  left: 512px;
+  height: 400px;
+}
+#space .building.six {
+  left: 640px;
+  height: 160px;
+}
+#space .building.seven {
+  left: 768px;
+  height: 360px;
+}
+#space .building.height {
+  left: 896px;
+  height: 320px;
+}
+#space .building.nine {
+  left: 1024px;
+  height: 440px;
+}
+#space .building.ten {
+  left: 1152px;
+  height: 280px;
+}
+#space .light {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  opacity: 0.1;
+  border-top: 4240px solid white;
+  border-left: 120px solid transparent;
+  border-right: 120px solid transparent;
+}
+#space .light.one {
+  left: 256px;
+  animation: scan 4s ease-in-out infinite alternate;
+}
+#space .light.two {
+  left: 853.33333333333px;
+  animation: scan 4s ease-in-out -1s infinite alternate-reverse;
+}
+#score {
+  width: 1112px;
+  height: 88px;
+  padding: 32px 40px 0;
+  background-color: yellow;
+  font-size: 48px;
+  overflow: hidden;
+  cursor: default;
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  z-index: 2;
+}
+#timer {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+}
+#timer #game-over,
+#timer #you-win {
+  background-color: black;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 200px;
+  z-index: -2;
+  cursor: default;
+}
+#timer span,
+#timer a {
+  display: block;
+  margin-bottom: 80px;
+  color: yellow;
+  text-align: center;
+  text-transform: uppercase;
+}
+#timer a {
+  margin-top: 80px;
+  color: blue;
+}
+form:valid #timer #you-win {
+  z-index: 999;
+}
+.invader .point {
+  position: absolute;
+  right: 0;
+  bottom: 44px;
+  z-index: 3;
+  width: 56px;
+  height: 56px;
+  background: black;
+  border-radius: 50%;
+  cursor: default;
+}
+.invader label {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-120%);
+  z-index: 4;
+  cursor: crosshair;
+  animation: fly 12s infinite;
+  width: 150px;
+  height: 150px;
+  margin: -20px 0 0 -20px;
+}
+.invader label::before {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  content: "";
+  animation: boing 2s infinite;
+  width: 80px;
+  height: 80px;
+  padding: 20px;
+  text-align: center;
+  line-height: 80px;
+  background: red;
+  border-radius: 50%;
+  box-shadow: 0 0 40px red;
+}
+.invader label .eye {
+  display: block;
+  position: absolute;
+  top: 47px;
+  width: 20px;
+  height: 20px;
+  background: yellow;
+  border-radius: 50%;
+}
+.invader label .eye.left {
+  left: 30%;
+}
+.invader label .eye.right {
+  right: 30%;
+}
+.invader .target {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 40px;
+  height: 40px;
+  margin: 8px 0 0 8px;
+}
+.invader .target:checked {
+  display: none;
+}
+.invader .target:checked ~ .explosion {
+  display: block;
+  animation: explode 1s;
+}
+.invader .target:checked ~ label {
+  animation: none;
+  display: none;
+}
+.invader .target:checked ~ label span {
+  display: none;
+}
+.invader .target:checked ~ .point {
+  background: red;
+}
+.invader.one label,
+.invader.one .target {
+  animation-delay: 1s;
+  animation-direction: normal;
+}
+.invader.one .point {
+  right: 72px;
+}
+.invader.two label,
+.invader.two .target {
+  animation-delay: 0.9s;
+  animation-direction: reverse;
+}
+.invader.two .point {
+  right: 168px;
+}
+.invader.three label,
+.invader.three .target {
+  animation-delay: 2s;
+  animation-direction: normal;
+}
+.invader.three .point {
+  right: 264px;
+}
+.invader.four label,
+.invader.four .target {
+  animation-delay: 4s;
+  animation-direction: normal;
+}
+.invader.four .point {
+  right: 360px;
+}
+.invader.five label,
+.invader.five .target {
+  animation-delay: 5s;
+  animation-direction: reverse;
+}
+.invader.five .point {
+  right: 456px;
+}
+.explosion {
+  width: 600px;
+  height: 600px;
+  background: yellow;
+  box-shadow: 0 0 40px yellow;
+  position: absolute;
+  display: block;
+  opacity: 0;
+  top: 120px;
+  left: 340px;
+}
+.explosion .explosionBase {
+  width: 600px;
+  height: 600px;
+  background: yellow;
+  box-shadow: 0 0 40px yellow;
+  position: absolute;
+}
+.explosion:before,
+.explosion:after {
+  width: 600px;
+  height: 600px;
+  background: yellow;
+  box-shadow: 0 0 40px yellow;
+  position: absolute;
+  content: "";
+}
+.explosion:before {
+  transform: rotate(30deg);
+}
+.explosion:after {
+  transform: rotate(-30deg);
+}
+.explosion span {
+  position: absolute;
+  top: 260px;
+  left: 0;
+  z-index: 3;
+  display: block;
+  width: 600px;
+  height: 600px;
+  font-size: 96px;
+  text-align: center;
+  text-transform: uppercase;
+  animation: shake 0.1s infinite;
+}
